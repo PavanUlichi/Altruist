@@ -2,7 +2,17 @@
 /*
  * GET users listing.
  */
+ const request = require('request');
 
+ const options = {
+     url: 'https://www.reddit.com/r/funny.json',
+     method: 'GET',
+     headers: {
+         'Accept': 'application/json',
+         'Accept-Charset': 'utf-8',
+         'User-Agent': 'my-reddit-client'
+     }
+ };
 exports.list = function(req, res){
 
   req.getConnection(function(err,connection){
@@ -73,6 +83,52 @@ exports.save = function(req,res){
           res.status(200).json({message:'/customers'});
 
         });
+
+       // console.log(query.sql); get raw query
+
+    });
+};
+
+/*Save the customer*/
+exports.transaction = function(req,res){
+
+    var input = JSON.parse(JSON.stringify(req.body));
+    var fields= JSON.stringify(input.selectedFields);
+    req.getConnection(function (err, connection) {
+
+        var data = {
+            uid    : input.uid,
+            type: input.type,
+            selectedFields: fields,
+            latitude: input.latitude,
+            longitude: input.longitude
+        };
+        if (input.type =="donor") {
+          var query = connection.query("INSERT INTO transactionTable set ? ",data, function(err, rows)
+          {
+
+            if (err)
+                console.log("Error inserting : %s ",err );
+
+            res.status(200).json({message:'/transaction'});
+
+          });
+        }
+        else {
+          var query=connection.query(('SELECT uid, type, (3959 * acos(cos(radians(' + input.latitude + ')) *  cos(radians(latitude)) *  cos(radians(longitude) -  radians(' + input.longitude + ')) +  sin(radians( ' + input.latitude + ')) *  sin(radians(latitude )))) AS distance FROM transactionTable HAVING distance < 25 AND type = "donor" ORDER BY distance LIMIT 0, 20;'),data, function(err, rows){
+            if (err) {
+              console.log(err);
+              res.status(200).send("not ok");
+            }
+            request(options, function(err, res, body) {
+              let json = JSON.parse(body);
+              console.log(json);
+              });
+            res.status(200).send("ok");
+
+          });
+        }
+
 
        // console.log(query.sql); get raw query
 
