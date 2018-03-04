@@ -9,6 +9,7 @@
     "ejs": "^1.0.0",
     "express": "3.5.1",
     "express-myconnection": "1.0.4",
+    "fcm-node": "^1.2.1",
     "jade": "*",
     "mysql": "2.2.0",
     "request": "^2.83.0"

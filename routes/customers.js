@@ -13,6 +13,13 @@
          'User-Agent': 'my-reddit-client'
      }
  };
+
+
+ var FCM = require('fcm-node');
+ var serverKey = 'AAAA63_6gdk:APA91bEmILLjrA11nkcNKpvD2umCOg-5p1KebB_tNSQOEtRvIfwJ6DjTRc9QSNfzQFYVakKxo2H-LkbkMOk725tE_3rK4kC0Z2LtTDZkRlvIu7p_fOL6Ro00gzUih4q6YJF8I8b427nq'; //put your server key here
+ var fcm = new FCM(serverKey);
+
+
 exports.list = function(req, res){
 
   req.getConnection(function(err,connection){
@@ -99,6 +106,7 @@ exports.register = function(req,res){
        var data = {
 
            name    : input.name,
+           uid: input.token,
            contact : input.contact,
            address   : input.address
 
@@ -165,20 +173,40 @@ exports.transaction = function(req,res){
               console.log(err);
               res.status(200).send("not ok");
             }
-            request(options, function(err, res, body) {
-              let json = JSON.parse(body);
-              console.log(json);
-              });
-            res.status(200).send("ok");
+            else {
+              rows.forEach(function(entry){
 
-          });
-        }
+                              var message = { //this may vary according to the message type (single recipient, multicast, topic, et cetera)
+                                  to: entry.id,
 
+                                  notification: {
+                                      title: 'Title of your push notification',
+                                      body: 'Body of your push notification'
+                                  },
+
+                                  data: {  //you can send only notification or only data(or include both)
+                                      my_key: 'my value',
+                                      my_another_key: 'my another value'
+                                  }
+                              };
+
+                              fcm.send(message, function(err, response){
+                                  if (err) {
+                                      console.log("Something has gone wrong!" +err);
+                                  } else {
+                                      console.log("Successfully sent with response: ", response);
+                                  }
+                              });
+                            });
+}
 
        // console.log(query.sql); get raw query
 
     });
-};
+
+}
+});
+}
 
 exports.save_edit = function(req,res){
 
