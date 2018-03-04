@@ -2,18 +2,6 @@
 /*
  * GET users listing.
  */
- const request = require('request');
-
- const options = {
-     url: 'https://www.reddit.com/r/funny.json',
-     method: 'GET',
-     headers: {
-         'Accept': 'application/json',
-         'Accept-Charset': 'utf-8',
-         'User-Agent': 'my-reddit-client'
-     }
- };
-
 
  var FCM = require('fcm-node');
  var serverKey = 'AAAA63_6gdk:APA91bEmILLjrA11nkcNKpvD2umCOg-5p1KebB_tNSQOEtRvIfwJ6DjTRc9QSNfzQFYVakKxo2H-LkbkMOk725tE_3rK4kC0Z2LtTDZkRlvIu7p_fOL6Ro00gzUih4q6YJF8I8b427nq'; //put your server key here
@@ -155,7 +143,8 @@ exports.transaction = function(req,res){
             type: input.type,
             selectedFields: fields,
             latitude: input.latitude,
-            longitude: input.longitude
+            longitude: input.longitude,
+            regTok: input.registrationToken
         };
         if (input.type =="donor") {
           var query = connection.query("INSERT INTO transactionTable set ? ",data, function(err, rows)

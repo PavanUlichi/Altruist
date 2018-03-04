@@ -41,9 +41,9 @@ app.use(
 
     connection(mysql,{
 
-        host: 'testsql.cjsmyxwfqn93.us-east-2.rds.amazonaws.com', //'localhost',
-        user: 'testsql',
-        password : 'Loveislife5',
+        host: 'localhost', //'localhost',
+        user: 'root',
+        password : 'root',
         port : 3306, //port mysql
         database:'nodejs'
 
