@@ -102,6 +102,9 @@ exports.register = function(req,res){
    var input = JSON.parse(JSON.stringify(req.body));
 
    req.getConnection(function (err, connection) {
+     if (err) {
+       console.log("Rajini");
+     }
 
        var data = {
 
