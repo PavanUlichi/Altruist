@@ -89,6 +89,47 @@ exports.save = function(req,res){
     });
 };
 
+
+exports.register = function(req,res){
+
+   var input = JSON.parse(JSON.stringify(req.body));
+
+   req.getConnection(function (err, connection) {
+
+       var data = {
+
+           name    : input.name,
+           contact : input.contact,
+           address   : input.address
+
+       };
+
+       var query = connection.query("INSERT INTO register set ? ",data, function(err, rows)
+       {
+
+         if (err){
+             console.log("Error Registering : %s ",err );
+           }
+           else {
+                 var query = connection.query("SELECT id FROM register where name = ?",input.name, function(err, rows){
+                   if(err){
+                     console.log("Error Registering : %s ",err );
+                     res.status(500).send('not ok');
+                   }
+                   else {
+                     console.log(rows[0].id);
+                     res.status(200).json({'message': rows[0].id});
+                   }
+
+                 });
+           }
+
+         });
+
+        // console.log(query.sql); get raw query
+
+     });
+  };
 /*Save the customer*/
 exports.transaction = function(req,res){
 
@@ -107,10 +148,14 @@ exports.transaction = function(req,res){
           var query = connection.query("INSERT INTO transactionTable set ? ",data, function(err, rows)
           {
 
-            if (err)
+            if (err){
                 console.log("Error inserting : %s ",err );
+                res.status(500).send("not ok")
+              }
+            else {
 
-            res.status(200).json({message:'/transaction'});
+                res.status(200).json({message:'/transaction'});
+            }
 
           });
         }

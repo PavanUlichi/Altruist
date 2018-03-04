@@ -41,9 +41,9 @@ app.use(
 
     connection(mysql,{
 
-        host: 'localhost', //'localhost',
-        user: 'root',
-        password : 'toor',
+        host: 'testsql.cjsmyxwfqn93.us-east-2.rds.amazonaws.com', //'localhost',
+        user: 'testsql',
+        password : 'Loveislife5',
         port : 3306, //port mysql
         database:'nodejs'
 
@@ -61,7 +61,7 @@ app.get('/customers/delete/:id', customers.delete_customer);
 app.get('/customers/edit/:id', customers.edit);
 app.post('/customers/edit/:id',customers.save_edit);
 app.post('/Transaction',customers.transaction);
-
+app.post('/Register', customers.register);
 app.use(app.router);
 
 http.createServer(app).listen(app.get('port'), function(){
