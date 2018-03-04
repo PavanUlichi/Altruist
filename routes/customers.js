@@ -105,7 +105,9 @@ exports.register = function(req,res){
      if (err) {
        console.log("Rajini");
      }
-
+     else {
+       console.log("kamal");
+     }
        var data = {
 
            name    : input.name,
